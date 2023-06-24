@@ -5,7 +5,13 @@ import { useCallback, useState } from "react";
 import MenuItem from "./MenuItem";
 import useRegisterModal from "../hooks/useRegisterModal";
 import useLoginModal from "../hooks/userLoginModal";
-const UserMenu = () => {
+import { signOut } from "next-auth/react";
+import { safeUser } from "@/app/types";
+
+interface UserMenuPros {
+  currentUser?: safeUser | null;
+}
+const UserMenu: React.FC<UserMenuPros> = ({ currentUser }) => {
   const registerModal = useRegisterModal();
   const loginModal = useLoginModal();
   const [isOpen, setIsOpen] = useState(false);
@@ -27,7 +33,7 @@ const UserMenu = () => {
         >
           <AiOutlineMenu />
           <div className="hidden md:block">
-            <Avatar />
+            <Avatar src={currentUser?.image} />
           </div>
         </div>
       </div>
@@ -47,10 +53,22 @@ const UserMenu = () => {
         "
         >
           <div className="flex flex-col cursor-pointer">
-            <>
-              <MenuItem onClick={loginModal.onOpen} lable="login" />
-              <MenuItem onClick={registerModal.onOpen} lable="Sign up" />
-            </>
+            {currentUser ? (
+              <>
+                <MenuItem onClick={() => {}} lable="My trips" />
+                <MenuItem onClick={() => {}} lable="My favorites" />
+                <MenuItem onClick={() => {}} lable="My reservations" />
+                <MenuItem onClick={() => {}} lable="My properties" />
+                <MenuItem onClick={() => {}} lable="Aribnb my home" />
+                <hr />
+                <MenuItem onClick={() => signOut()} lable="Logout" />
+              </>
+            ) : (
+              <>
+                <MenuItem onClick={loginModal.onOpen} lable="login" />
+                <MenuItem onClick={registerModal.onOpen} lable="Sign up" />
+              </>
+            )}
           </div>
         </div>
       )}
